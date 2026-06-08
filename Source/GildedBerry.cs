@@ -7,9 +7,22 @@ namespace Celeste.Mod.ElegiacHelper.Entities;
 [CustomEntity("ElegiacHelper/GildedBerry")]
 public class GildedBerry : Strawberry
 {
-    public int deaths;
+    public int deathsRemaining;
 
-    public GildedBerry(EntityData data, Vector2 offset, EntityID gid) : base(data, offset, gid) {
+    public GildedBerry(EntityData data, Vector2 offset, EntityID gid, int deathsRemaining) : base(data, offset, gid) {
         ReturnHomeWhenLost = false;
+		this.deathsRemaining = deathsRemaining;
     }
+
+	new public void OnLoseLeader() {
+		if (!collected) {
+			deathsRemaining -= 1;
+		}
+
+		base.OnLoseLeader();
+
+		if (deathsRemaining == 0) {
+			ReturnHomeWhenLost = true;
+		}
+	}
 }
